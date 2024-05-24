@@ -68,18 +68,18 @@ class UserController extends AbstractController
     public function create(ManagerRegistry $doctrine,Request $request): JsonResponse
     {
 
+        $parameters = json_decode($request->getContent(), true);
         $entityManager = $doctrine->getManager();
-
         $User = new User();
 
-        $User->setNmUser($request->request->get('nm_user'));
-        $User->setEmailUser($request->request->get('email_user'));
-        $User->setNmCurso($request->request->get('nm_curso'));
-        $User->setVlDocument($request->request->get('vl_document'));
-        $User->setRmUser($request->request->get('rm_user'));
-        $User->setAnoConclusaoCurso($request->request->get('ano_conclusao_curso'));
-        $User->setVlContato($request->request->get('vl_contato'));
-        $User->setCkVinculoUser($request->request->get('ck_vinculo_user'));
+        $User->setNmUser($parameters['nm_user']);
+        $User->setEmailUser($parameters['email_user']);
+        $User->setNmCurso($parameters['nm_curso']);
+        $User->setVlDocument($parameters['vl_document']);
+        $User->setRmUser($parameters['rm_user']);
+        $User->setAnoConclusaoCurso($parameters['ano_conclusao_curso']);
+        $User->setVlContato($parameters['vl_contato']);
+        $User->setCkVinculoUser($parameters['ck_vinculo_user']);
 
         $entityManager->persist($User);
         $entityManager->flush();
@@ -102,25 +102,26 @@ class UserController extends AbstractController
     #[Route('/users/{id}', name: 'update_user', methods:['put','patch'])]
     public function update(ManagerRegistry $doctrine, Request $request, int $id): JsonResponse
     {
+        $parameters = json_decode($request->getContent(), true);
+        $entityManager = $doctrine->getManager();
 
-        $User = $doctrine
+        $User = $entityManager
             ->getRepository(User::class)
             ->find($id);
 
-
         if(!$User)
             return $this->json("Não foi localizado nenhum usuário para o id: ". $id, 404);
+        
+        $User->setNmUser($parameters['nm_user']);
+        $User->setEmailUser($parameters['email_user']);
+        $User->setNmCurso($parameters['nm_curso']);
+        $User->setVlDocument($parameters['vl_document']);
+        $User->setRmUser($parameters['rm_user']);
+        $User->setAnoConclusaoCurso($parameters['ano_conclusao_curso']);
+        $User->setVlContato($parameters['vl_contato']);
+        $User->setCkVinculoUser($parameters['ck_vinculo_user']);
 
-        $User->setNmUser($request->request->get('nm_user'));
-        $User->setEmailUser($request->request->get('email_user'));
-        $User->setNmCurso($request->request->get('nm_curso'));
-        $User->setVlDocument($request->request->get('vl_document'));
-        $User->setRmUser($request->request->get('rm_user'));
-        $User->setAnoConclusaoCurso($request->request->get('ano_conclusao_curso'));
-        $User->setVlContato($request->request->get('vl_contato'));
-        $User->setCkVinculoUser($request->request->get('ck_vinculo_user'));
-
-        $doctrine->getManager()->flush();
+        $entityManager->flush();
 
         $data = [
             'id' => $User->getId(),
@@ -147,7 +148,6 @@ class UserController extends AbstractController
 
         if(!$User)
             return $this->json("Não foi localizado nenhum usuário para o id: ". $id, 404);
-
 
         $doctrine->getManager()->remove($User);
         $doctrine->getManager()->flush();
