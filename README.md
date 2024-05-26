@@ -21,4 +21,4 @@ Por fim, execute o comando:
 symfony server:start
 
 
-Dica: Segue um vídeo bem útil referente a execução de um projeto php por meio do symfony
+Dica: Segue um vídeo bem útil referente a execução de um projeto php por meio do symfony: https://www.youtube.com/watch?v=dMdOKT4hfwc&ab_channel=Binaryboxtuts
