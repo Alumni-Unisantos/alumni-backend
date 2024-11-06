@@ -19,7 +19,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.1'  # Certifique-se de que esta versão atende aos requisitos do seu projeto
+          php-version: '8.3'  # Certifique-se de que esta versão atende aos requisitos do seu projeto
 
       # 3. Instalação do Composer
       - name: Install Composer Dependencies
