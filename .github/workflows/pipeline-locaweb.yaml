@@ -1,0 +1,58 @@
+name: Deploy PHP Application via FTP
+
+on:
+  push:
+    branches:
+      - main  # Substitua pela branch que você deseja monitorar
+
+jobs:
+  deploy:
+    name: Deploy to Locaweb via FTP
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Checkout do Código
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      # 2. Configuração do PHP
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.0'  # Certifique-se de que esta versão atende aos requisitos do seu projeto
+
+      # 3. Instalação do Composer
+      - name: Install Composer Dependencies
+        run: |
+          composer install --no-dev --prefer-dist --optimize-autoloader
+
+      # Opcional: Cache de Dependências para acelerar builds futuros
+      - name: Cache Composer Dependencies
+        uses: actions/cache@v3
+        with:
+          path: vendor
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
+
+      # 4. Deploy via FTP
+      - name: FTP Deploy to Locaweb
+        uses: SamKirkland/FTP-Deploy-Action@4.3.0
+        with:
+          server: ${{ secrets.FTP_SERVER }}       # Defina nos Secrets do GitHub
+          username: ${{ secrets.FTP_USERNAME }}   # Defina nos Secrets do GitHub
+          password: ${{ secrets.FTP_PASSWORD }}   # Defina nos Secrets do GitHub
+          local-dir: ./                          # Diretório local a ser enviado
+          server-dir: /public_html/               # Diretório no servidor (ajuste conforme necessário)
+          protocol: ftp                           # Pode ser ftp ou ftps conforme o seu servidor
+          port: 21                                # Porta FTP padrão; ajuste se necessário
+
+      # Opcional: Notificação de Deploy Bem-sucedido
+      - name: Notify Deployment Success
+        if: success()
+        run: echo "Deploy realizado com sucesso!"
+
+      # Opcional: Notificação de Falha no Deploy
+      - name: Notify Deployment Failure
+        if: failure()
+        run: echo "Falha no deploy. Verifique os logs para mais detalhes."
