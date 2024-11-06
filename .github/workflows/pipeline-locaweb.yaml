@@ -23,6 +23,8 @@ jobs:
 
       # 3. Instalação do Composer
       - name: Install Composer Dependencies
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }} # Defina o segredo no GitHub com os detalhes do banco
         run: |
           composer install --no-dev --prefer-dist --optimize-autoloader
 
