@@ -45,7 +45,7 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}   # Defina nos Secrets do GitHub
           password: ${{ secrets.FTP_PASSWORD }}   # Defina nos Secrets do GitHub
           local-dir: ./                          # Diretório local a ser enviado
-          server-dir: /public_html/               # Diretório no servidor (ajuste conforme necessário)
+          server-dir: /public_html/api               # Diretório no servidor (ajuste conforme necessário)
           protocol: ftp                           # Pode ser ftp ou ftps conforme o seu servidor
           port: 21                                # Porta FTP padrão; ajuste se necessário
 
