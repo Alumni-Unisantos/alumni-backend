@@ -24,7 +24,7 @@ class Postagem
         return $this->userId;
     }
 
-    public function setUserId(?string $userId): ?int
+    public function setUserId(?int $userId): self
     {
         $this->userId = $userId;
 
