@@ -7,19 +7,23 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\PostagemRepository;
+use App\Repository\UserRepository;
 use App\Entity\Postagem;
+use App\Entity\User;
 use Psr\Log\LoggerInterface;
 
 #[Route('/api/feed', name: 'api_feed_')]
 class PostagemController extends AbstractController
 {
     private PostagemRepository $postagemRepository;
+    private UserRepository $userRepository;
     private LoggerInterface $logger;
 
-    public function __construct(PostagemRepository $postagemRepository, LoggerInterface $logger)
+    public function __construct(PostagemRepository $postagemRepository, LoggerInterface $logger, UserRepository $userRepository)
     {
         $this->postagemRepository = $postagemRepository;
         $this->logger = $logger;
+        $this->userRepository = $userRepository;
     }
 
     #[Route('/inserirPostagem', name: 'inserirPostagem', methods: ['POST'])]
@@ -35,12 +39,19 @@ class PostagemController extends AbstractController
             return $this->json(['error' => 'Campos obrigatórios ausentes.'], 400);
         }
 
+        $user = $this->userRepository->find($userId);
+
+        if (!$user) {
+            return $this->json(['error' => 'Usuário não encontrado.'], 404);
+        }
+
         $postagem = new Postagem();
+
         $postagem->setConteudo($conteudo)
-                 ->setUserId($userId)
+                 ->setUser($user)
                  ->setDataPostagem(new \DateTime());
 
-        // $this->postagemRepository->create($postagem);
+        $this->postagemRepository->create($postagem);
 
         return $this->json([
             'conteudo' => $postagem->getConteudo()
@@ -50,24 +61,16 @@ class PostagemController extends AbstractController
     #[Route('/buscarUltimasPostagens', name: 'buscarUltimasPostagens', methods: ['GET'])]
     public function buscarUltimasPostagens(Request $request): JsonResponse
     {
-        // $postagens = $this->postagemRepository->buscarUltimasPostagens(10);
-        $postagens = range(1, 10);
+        $postagens = $this->postagemRepository->buscarUltimasPostagens(10);
 
-        // $resultado = array_map(function (Postagem $postagem) {
-        //     return [
-        //         'userId' => $postagem->getUserId(),
-        //         'conteudo' => $postagem->getConteudo(),
-        //         'dataPostagem' => $postagem->getDataPostagem()?->format('Y-m-d H:i:s'),
-        //     ];
-        // }, $postagens);
-        $resultado = array_map(function ($i) {
+        $resultado = array_map(function (Postagem $postagem) {
             return [
-                'userId' => 123 + $i,
-                'conteudo' => "<div>Postagem $i funcionando</div>",
-                'dataPostagem' => date('Y-m-d H:i:s', strtotime("-$i days")),
+                'userId' => $postagem->getUser()->getId(),
+                'conteudo' => $postagem->getConteudo(),
+                'dataPostagem' => $postagem->getDataPostagem()?->format('Y-m-d H:i:s'),
             ];
         }, $postagens);
-
+        
         return $this->json($resultado);
     }
 }

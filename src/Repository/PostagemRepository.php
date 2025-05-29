@@ -17,9 +17,9 @@ class PostagemRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return Postagem
+     * @return Void
      */
-    public function create(Postagem $Postagem): ?Postagem
+    public function create(Postagem $Postagem): void
     {
         $entityManager = $this->getEntityManager();
         $entityManager->persist($Postagem);
