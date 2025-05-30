@@ -49,12 +49,13 @@ class PostagemController extends AbstractController
 
         $postagem->setConteudo($conteudo)
                  ->setUser($user)
-                 ->setDataPostagem(new \DateTime());
+                 ->setDataPostagem(new \DateTime('now', new \DateTimeZone('America/Sao_Paulo')));
 
         $this->postagemRepository->create($postagem);
 
         return $this->json([
-            'conteudo' => $postagem->getConteudo()
+            'conteudo' => $postagem->getConteudo(),
+            'dataPostagem' => $postagem->getDataPostagem()?->format(\DateTime::ATOM)
         ], 201);
     }
 
@@ -67,7 +68,7 @@ class PostagemController extends AbstractController
             return [
                 'userId' => $postagem->getUser()->getId(),
                 'conteudo' => $postagem->getConteudo(),
-                'dataPostagem' => $postagem->getDataPostagem()?->format('Y-m-d H:i:s'),
+                'dataPostagem' => $postagem->getDataPostagem()?->format(\DateTime::ATOM)
             ];
         }, $postagens);
         
