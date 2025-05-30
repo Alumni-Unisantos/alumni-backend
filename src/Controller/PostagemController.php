@@ -65,10 +65,17 @@ class PostagemController extends AbstractController
         $postagens = $this->postagemRepository->buscarUltimasPostagens(10);
 
         $resultado = array_map(function (Postagem $postagem) {
+            $data = $postagem->getDataPostagem();
+        
+            if ($data) {
+                $data->setTimezone(new \DateTimeZone('America/Sao_Paulo'))
+                    ->modify('+5 hours');
+            }
+
             return [
                 'userId' => $postagem->getUser()->getId(),
                 'conteudo' => $postagem->getConteudo(),
-                'dataPostagem' => $postagem->getDataPostagem()?->format(\DateTime::ATOM)
+                'dataPostagem' => $data?->format(\DateTime::ATOM)
             ];
         }, $postagens);
         
