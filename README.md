@@ -22,3 +22,28 @@ symfony server:start
 
 
 Dica: Segue um vídeo bem útil referente a execução de um projeto php por meio do symfony: https://www.youtube.com/watch?v=dMdOKT4hfwc&ab_channel=Binaryboxtuts
+
+**#Criação do Feed**\
+Integrantes:\
+-Alec Emil Meier\
+-Adrielle Valascvijus Fernandes\
+-Daniel Domingues Gama\
+-Gustavo Andrade\
+-Henry Mitsuo Kasai\
+-Lavínia Lopes de Lana\
+-Leonardo Wright Lima\
+-Matheus Gois Rocha\
+-Matheus Moledo Fonseca Vasconcelos\
+-Michael Douglas Santos Costa\
+-Raquel Nazaré Belfort Costa\
+-Thiago Conrado Martins\
+
+**Alterações**:
+	Criação da página de feed com as funcionalidades de buscar postagens e inserir postagens.\
+  Ao abrir a página é realizada uma requisição ao back-end buscando as postagens em ordem decrescente da data da postagem e retornado ao front-end para serem exibidas.\
+  Contudo, é possível observar que a integração com o banco de dados foi realizada de forma local e a estrutura de usuários ainda não foi criada, e por isso está sendo exibido uma imagem padrão na foto do usuário, assim com um nome padrão.
+  
+**Algumas possíveis sugestões de melhorias futuras são:**\
+-Criação da estrutura de usuários, assim como a integração deles com o banco de dados;\
+-Inserção de novas funcionalidades sobre as postagens. Exemplo: editar, excluir, curtir, comentar, compartilhar.\
+-Inserir novos tipos de postagens. Exemplo: evento, enquete, inserção de imagens.
